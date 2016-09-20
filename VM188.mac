@@ -1,0 +1,27 @@
+!get maximum von misses stress from BEAM188
+! arg1 = element number, arg2 = return variable
+e1 = arg1
+*get, AR21, ELEM, e1, smisc, 31
+*get, AR22, ELEM, e1, smisc, 32
+*get, AR23, ELEM, e1, smisc, 33
+*get, AR24, ELEM, e1, smisc, 34
+*get, AR25, ELEM, e1, smisc, 35
+AR26=max(AR22,AR23,AR24,AR25)+AR21
+AR27=min(AR22,AR23,AR24,AR25)+AR21
+*if,abs(AR26),gt,abs(AR27),then
+  AR28=AR26 $ *else $ AR28=AR27
+*endif
+*get, AR21, ELEM, e1, smisc, 36
+*get, AR22, ELEM, e1, smisc, 37
+*get, AR23, ELEM, e1, smisc, 38
+*get, AR24, ELEM, e1, smisc, 39
+*get, AR25, ELEM, e1, smisc, 40
+AR26=max(AR22,AR23,AR24,AR25)+AR21
+AR27=min(AR22,AR23,AR24,AR25)+AR21
+*if,abs(AR26),gt,abs(AR27),then
+  AR29=AR26 $ *else $ AR29=AR27 
+*endif
+*if,abs(AR28),gt,abs(AR29),then
+  AR30=AR28 $ *else $ AR30=AR29
+*endif
+_RETURN = AR30

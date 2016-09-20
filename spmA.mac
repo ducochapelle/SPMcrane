@@ -1,0 +1,18 @@
+finish
+/clear,nostart
+
+/out,spm,out
+*vwrite,' boom-A','jib-A', 'reach-X', 'reach-Z','aboom1','aboom2','ajib3','ajib4'
+(8A8)
+/out
+*do,alpha,0,81.7,5
+  *do,beta,60,180,5
+    finish
+    parsav
+    /clear,nostart
+    /view,,,-1,
+    parres
+    /input,spmB,mac,,:module
+    /input,spmC,mac
+  *enddo
+*enddo

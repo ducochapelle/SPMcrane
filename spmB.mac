@@ -1,0 +1,182 @@
+! units: mm, ton, s; MPa, mm/s2, N
+! cs: beam points to x, up is z
+finish
+/clear, nostart
+
+
+
+!
+!          4    5   
+!          14 15  
+!       3         6                             
+!        13     16                
+!    2              7             
+!     12             8          
+! 1                         
+!11                          
+!   19                       
+!   (21,22,23,26,92)                   
+
+alpha = arg1 ! luffing
+beta = arg2 ! jibbing
+
+:module
+*afun, deg
+
+boom_steel_mass = (2*.012*36*2.5+2*25*.010*2)*0.786 ! not used
+! Members: lenghts sort of arbitrary
+blfp = 3*5800+500 !boom tip from pivot
+jrtt = 3*5800+500-3500  ! jib rotationpoint to tip
+
+! Mechanism: Following parameters taken from CAD drawing
+btta = 6217 ! boom tip to actuator
+bctr = 700 ! boom centerlinte to rotatejib
+bcta = 700+250 ! boom centerline to actuator
+jrax = 2046.4*cos(34.5) ! Jib Rotationpoint to Actuator dX
+jray = 2046.4*sin(34.5)! Jib Rotationpoint to Actuator dY
+
+/prep7
+MPTEMP,1,0 ! steel in [mm;ton;N]
+MPDATA,DENS,1,,1e-20 !7860e-12 
+MPDATA,EX,1,,210000
+MPDATA,PRXY,1,,0.3
+MPDATA,DENS,2,,1e-20 !7860e-12 
+MPDATA,EX,2,,210000
+MPDATA,PRXY,2,,0.3
+MPDATA,DENS,3,,1e-20 ! nihilitium
+MPDATA,EX,3,,210000e6
+MPDATA,PRXY,3,,0.3
+ET,1,BEAM188
+SECTYPE,   1, BEAM, HREC, , 0   
+SECOFFSET, CENT 
+SECDATA,1000,500,10,10,12,12 
+SECTYPE,   3, BEAM, CTUBE, , 0   
+SECOFFSET, CENT 
+SECDATA,160,200,12  ! Ri Ro n
+ET,2,LINK180
+R,2,100**2,0   !( elem, area, mass/length)
+ET,3,MASS21
+R,3,1,1,1     ! deadload 1 tons each
+R,5,5,5,5     ! liveload 5 tons
+R,10,10,10,10 ! liveload 10 tons
+
+N, 1,0,0,0
+N,11,0, 1202,0
+N,21,0,-1202,0
+N, 2,5800,0,0
+N,12,5800, 1202,-1450
+N,22,5800,-1202,-1450
+N, 3,blfp-btta,0,0
+N,13,blfp-btta, 500,-bcta
+N,23,blfp-btta,-500,-bcta
+N, 4,blfp,0,0
+N,14,blfp, 500,-bctr
+N,24,blfp,-500,-bctr
+wpcsys
+nwplan,,1
+wprota,,,-alpha
+transfer,4,0,all
+N,19,1500, 1202,-2500
+N,29,1500,-1202,-2500
+MAT,1
+TYPE,1
+SECNUM,1
+E,1,2 
+E,2,3 
+E,3,4 
+MAT,3
+SECNUM,3
+E,1,11
+E,1,21
+E,2,12
+E,2,22
+E,3,13
+E,3,23
+E,4,14
+E,4,24
+
+CM,boom,elem
+
+nsel,none
+N, 5,,0,0
+N,15,,500,-bctr
+N,25,,-500,-bctr
+N, 6,jrax,   0,    0
+N,16,jrax, 500,-bctr+jray
+N,26,jrax,-500,-bctr+jray
+N, 7,jrtt,0,1000
+N, 8,jrtt+1000,0,500
+wpcsys
+wpoffs,,,bctr
+transfer,4,0,all
+wpcsys
+nsel,a,,,4
+nwplan,,4
+nsel,u,,,4
+wprota,,,-alpha
+csys,4
+wpoffs,,,-bctr
+csys,0
+wprota,,,beta
+transfer,4,0,all
+MAT,1
+SECNUM,1
+E,5,6 
+E,6,7 
+E,7,8 
+MAT,3
+SECNUM,3
+E,6,16 
+E,6,26 
+E,5,15
+E,5,25
+CMSEL,u,boom
+CM,jib,elem
+
+N,19,1500,1202,-2500
+N,29,1500,-1202,-2500
+allsel
+
+type,2
+real,2
+
+MAT,2
+TYPE,2
+REAL,2
+e,19,12
+e,29,22
+e,13,16
+e,23,26
+CMSEL,u,boom
+CMSEL,u,jib
+CM,actuators,elem
+allsel
+
+esel,none
+TYPE,3
+REAL,3
+E,(1:7:1)
+CM,deadload,elem
+
+esel,none
+REAL,10
+E,8
+cm,liveload,elem
+allsel
+
+/solu
+d,11,ux,0,,,,uz
+d,21,ux,0,,,,uy,uz
+d,19,ux,0,,,,uy,uz
+d,29,ux,0,,,,uy,uz
+
+cp,next,ux,14,15
+cp,next,uz,14,15
+cp,next,uy,24,25
+cp,next,ux,24,25
+cp,next,uz,24,25
+
+acel,,-5000,10000
+
+solve
+
