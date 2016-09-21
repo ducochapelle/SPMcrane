@@ -18,18 +18,18 @@ finish
 
 
 *do,liveload,3,7,2
-*if,liveload,eq,7,then ! scraping by to do 3, 5 and 10 tons
-liveload = 10 
-*endif 
-*do,alpha,0,81.7,5
-  *do,beta,60,180,5
-    finish
-    parsav
-    /clear,nostart
-    /view,,,-1,
-    parres
-    /input,spmB,mac,,:module
-    /input,spmC,mac
-  *enddo
-*enddo 
+  *if,liveload,eq,7,then ! scraping by to do 3, 5 and 10 tons
+  liveload = 10 
+  *endif 
+  *do,alpha,0,81.7,5
+    *do,beta,60,180,5
+      finish
+      parsav
+      /clear,nostart
+      /view,,,-1,
+      parres
+      /input,spmB,mac,,:module
+      /input,spmC,mac
+    *enddo
+  *enddo 
 *enddo

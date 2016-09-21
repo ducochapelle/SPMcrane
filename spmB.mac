@@ -58,77 +58,77 @@ bpull = jpull ! the old actuator doesn't suffice in the buckling department
 
 
 /prep7
-MPTEMP,1,0 ! steel in [mm;ton;N]
-MPDATA,DENS,1,,1e-20 !7860e-12 
-MPDATA,EX,1,,210000
-MPDATA,PRXY,1,,0.3
-MPDATA,DENS,2,,1e-20 !7860e-12 
-MPDATA,EX,2,,210000
-MPDATA,PRXY,2,,0.3
-MPDATA,DENS,3,,1e-20 ! nihilitium
-MPDATA,EX,3,,210000e6
-MPDATA,PRXY,3,,0.3
-ET,1,BEAM188
-SECTYPE,   1, BEAM, HREC, , 0   
-SECOFFSET, CENT 
-SECDATA,1000,500,10,10,12,12 
-SECTYPE,   3, BEAM, CTUBE, , 0   
-SECOFFSET, CENT 
-SECDATA,160,200,12  ! Ri Ro n
-ET,2,LINK180
-R,2,pi/4*jrod**2,0   !( elem, area, mass/length)
-R,4,pi/4*brod**2,0   !( elem, area, mass/length)
-ET,3,MASS21
-R,3,2.5,2.5,2.5     ! deadload 2.5 tons each * 7 = 17.5 (calculated = 16)
-R,5,liveload,liveload,liveload     ! liveload 
+mptemp,1,0 ! steel in [mm;ton;N]
+mpdata,dens,1,,1e-20 !7860e-12 
+mpdata,ex,1,,210000
+mpdata,prxy,1,,0.3
+mpdata,dens,2,,1e-20 !7860e-12 
+mpdata,ex,2,,210000
+mpdata,prxy,2,,0.3
+mpdata,dens,3,,1e-20 ! nihilitium
+mpdata,ex,3,,210000e6
+mpdata,prxy,3,,0.3
+et,1,beam188
+sectype,   1, beam, hrec, , 0   
+secoffset, cent 
+secdata,1000,500,10,10,12,12 
+sectype,   3, beam, ctube, , 0   
+secoffset, cent 
+secdata,160,200,12  ! ri ro n
+et,2,link180
+r,2,pi/4*jrod**2,0   !( elem, area, mass/length)
+r,4,pi/4*brod**2,0   !( elem, area, mass/length)
+et,3,mass21
+r,3,2.5,2.5,2.5     ! deadload 2.5 tons each * 7 = 17.5 (calculated = 16)
+r,5,liveload,liveload,liveload     ! liveload 
 
 
-N, 1,0,0,0
-N,11,0, 1202,0
-N,21,0,-1202,0
-N, 2,5800,0,0
-N,12,5800, 1202,-1450
-N,22,5800,-1202,-1450
-N, 3,blfp-btta,0,0
-N,13,blfp-btta, 500,-bcta
-N,23,blfp-btta,-500,-bcta
-N, 4,blfp,0,0
-N,14,blfp, 500,-bctr
-N,24,blfp,-500,-bctr
+n, 1,0,0,0
+n,11,0, 1202,0
+n,21,0,-1202,0
+n, 2,5800,0,0
+n,12,5800, 1202,-1450
+n,22,5800,-1202,-1450
+n, 3,blfp-btta,0,0
+n,13,blfp-btta, 500,-bcta
+n,23,blfp-btta,-500,-bcta
+n, 4,blfp,0,0
+n,14,blfp, 500,-bctr
+n,24,blfp,-500,-bctr
 wpcsys
 nwplan,,1
 wprota,,,-alpha
 transfer,4,0,all
-N,19,1500, 1202,-2500
-N,29,1500,-1202,-2500
-MAT,1
-TYPE,1
-SECNUM,1
-E,1,2 
-E,2,3 
-E,3,4 
-MAT,3
-SECNUM,3
-E,1,11
-E,1,21
-E,2,12
-E,2,22
-E,3,13
-E,3,23
-E,4,14
-E,4,24
+n,19,1500, 1202,-2500
+n,29,1500,-1202,-2500
+mat,1
+type,1
+secnum,1
+e,1,2 
+e,2,3 
+e,3,4 
+mat,3
+secnum,3
+e,1,11
+e,1,21
+e,2,12
+e,2,22
+e,3,13
+e,3,23
+e,4,14
+e,4,24
 
-CM,boom,elem
+cm,boom,elem
 
 nsel,none
-N, 5,,0,0
-N,15,,500,-bctr
-N,25,,-500,-bctr
-N, 6,jrax,   0,    0
-N,16,jrax, 500,-bctr+jray
-N,26,jrax,-500,-bctr+jray
-N, 7,jrtt,0,1000
-N, 8,jrtt+1000,0,500
+n, 5,,0,0
+n,15,,500,-bctr
+n,25,,-500,-bctr
+n, 6,jrax,   0,    0
+n,16,jrax, 500,-bctr+jray
+n,26,jrax,-500,-bctr+jray
+n, 7,jrtt,0,1000
+n, 8,jrtt+1000,0,500
 wpcsys
 wpoffs,,,bctr
 transfer,4,0,all
@@ -142,47 +142,47 @@ wpoffs,,,-bctr
 csys,0
 wprota,,,beta
 transfer,4,0,all
-MAT,1
-SECNUM,1
-E,5,6 
-E,6,7 
-E,7,8 
-MAT,3
-SECNUM,3
-E,6,16 
-E,6,26 
-E,5,15
-E,5,25
-CMSEL,u,boom
-CM,jib,elem
+mat,1
+secnum,1
+e,5,6 
+e,6,7 
+e,7,8 
+mat,3
+secnum,3
+e,6,16 
+e,6,26 
+e,5,15
+e,5,25
+cmsel,u,boom
+cm,jib,elem
 
-N,19,1500,1202,-2500
-N,29,1500,-1202,-2500
+n,19,1500,1202,-2500
+n,29,1500,-1202,-2500
 allsel
 
 
-MAT,2
-TYPE,2
-REAL,4
+mat,2
+type,2
+real,4
 e,19,12
 e,29,22
-REAL,2
+real,2
 e,13,16
 e,23,26
-CMSEL,u,boom
-CMSEL,u,jib
-CM,actuators,elem
+cmsel,u,boom
+cmsel,u,jib
+cm,actuators,elem
 allsel
 
 esel,none
-TYPE,3
-REAL,3
-E,(1:7:1)
-CM,deadload,elem
+type,3
+real,3
+e,(1:7:1)
+cm,deadload,elem
 
 esel,none
-REAL,5
-E,8
+real,5
+e,8
 cm,liveload,elem
 allsel
 
@@ -199,9 +199,9 @@ cp,next,ux,24,25
 cp,next,uz,24,25
 
 acel,(0-acelx)*gravity,(0-acely)*gravity,(1+acelz)*gravity
-LSWRITE,1
+lswrite,1
 acel,(0+acelx)*gravity,(0-acely)*gravity,(1+acelz)*gravity
-LSWRITE,2
+lswrite,2
 
 lssolve,1,2,1
 

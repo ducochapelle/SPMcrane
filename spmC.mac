@@ -7,17 +7,17 @@ posx = posx + nx(8) + 200 ! offset from centerline
 posz = posz + nz(8) + 8625-1250 ! offset from deck 
 
 *do,ls,1,2
-cmsel,,actuators
-n=1
-i = elnext(n)
-*dowhile,i
-  *get,fact%n%%ls%,ELEM,i,smisc,1
-  *get,lact%n%,ELEM,i,LENG ! get length for buckling
-  n = n+1
-  i = elnext(i)
-*enddo
-allsel
-set,next
+  cmsel,,actuators
+  n=1
+  i = elnext(n)
+  *dowhile,i
+    *get,fact%n%%ls%,ELEM,i,smisc,1
+    *get,lact%n%,ELEM,i,LENG ! get length for buckling
+    n = n+1
+    i = elnext(i)
+  *enddo
+  allsel
+  set,next
 *enddo
 
 I = pi/64*brod**4
