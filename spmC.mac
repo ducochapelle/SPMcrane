@@ -1,33 +1,35 @@
 /post1
-! /esha,0
-! /pbc,cp,,1
-! /pbc,u,,1
-! /pbc,nfor,,0
-! /VIEW,1,,-1 
-! /ANG,1  
-! /REP,FAST 
-
-set,last
-! plns,s,eqv
+set,first
 
 *get,posx,node,8,u,x
 *get,posz,node,8,u,z
 posx = posx + nx(8) + 200 ! offset from centerline
 posz = posz + nz(8) + 8625-1250 ! offset from deck 
 
+*do,ls,1,2
 cmsel,,actuators
-! etable,fact,smisc,1
 n=1
 i = elnext(n)
 *dowhile,i
-  *get,fact%n%,ELEM,i,smisc,1
+  *get,fact%n%%ls%,ELEM,i,smisc,1
+  *get,lact%n%,ELEM,i,LENG ! get length for buckling
   n = n+1
   i = elnext(i)
 *enddo
 allsel
+set,next
+*enddo
 
-f1 = max(fact1, fact2, fact3, fact4) ! 496
-f2 = min(fact1, fact2, fact3, fact4) ! 1031, 5000/1.5
+I = pi/64*brod**4
+P = (pi**2*Emodulus*I/(max(lact1,lact2))**2)/3 ! sf=3 vreemac catalogus
+fbmax = max(0, max(fact11, fact21, fact12, fact22) / bpull )
+fbmin = max(0, min(fact11, fact21, fact12, fact22) / bpush )
+fbbuc = max(0, min(fact11, fact21, fact12, fact22) / (-P)  )
+I = pi/64*jrod**4
+P = (pi**2*Emodulus*I/(max(lact3,lact4))**2)/3 ! sf=3 vreemac catalogus
+fjmax = max(0, max(fact31, fact41, fact32, fact42) / bpull )
+fjmin = max(0, min(fact31, fact41, fact32, fact42) / bpush )
+fjbuc = max(0, min(fact31, fact41, fact32, fact42) / (-P)  )
 
 ! f1 > 496e3 -> adjust R down
 ! f2 < -1031000 -> adjust R down
@@ -38,10 +40,22 @@ f2 = min(fact1, fact2, fact3, fact4) ! 1031, 5000/1.5
 ! *if,abs(v2/vt-1),lt,vt_error,then
 ! linear iterator, finding vt(dt), based on v1(d1) and v2(d2). And it's escape line.
 
-
 /out,spm,out,,append
-*vwrite,alpha,beta,posx,posz,fact1,fact2,fact3,fact4
-(4F8.0, 4EN12.2E1)
+*vwrite,liveload,alpha,beta,posx,posz,fbmax,fbmin,fbbuc,fjmax,fjmin,fjbuc
+(5F8.0, 6F8.3)
 /out
 
-! pletab,fact
+/out,spmbubble,out,,append
+*vwrite,liveload,alpha,beta,',',posx,posz,' fbmax',fbmax
+(3F8.0, A8, 2F8.0, A8, F8.3)              
+*vwrite,liveload,alpha,beta,',',posx,posz,' fbmin',fbmin
+(3F8.0, A8, 2F8.0, A8, F8.3)              
+*vwrite,liveload,alpha,beta,',',posx,posz,' fbbuc',fbbuc
+(3F8.0, A8, 2F8.0, A8, F8.3)              
+*vwrite,liveload,alpha,beta,',',posx,posz,' fjmax',fjmax
+(3F8.0, A8, 2F8.0, A8, F8.3)              
+*vwrite,liveload,alpha,beta,',',posx,posz,' fjmin',fjmin
+(3F8.0, A8, 2F8.0, A8, F8.3)             
+*vwrite,liveload,alpha,beta,',',posx,posz,' fjbuc',fjbuc
+(3F8.0, A8, 2F8.0, A8, F8.3)
+/out

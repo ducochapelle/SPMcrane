@@ -5,7 +5,7 @@ finish
 
 
 
-!
+! NODE NUMBERS
 !          4    5   
 !          14 15  
 !       3         6                             
@@ -15,15 +15,24 @@ finish
 ! 1                         
 !11                          
 !   19                       
-!   (21,22,23,26,92)                   
+!   (21,22,23,26,92) equivalent on other side where applicable               
 
-alpha = arg1 ! luffing
-beta = arg2 ! jibbing
+alpha = arg1 ! luffing [deg]
+beta = arg2 ! jibbing [deg]
+liveload = arg3 ! load in tip [ton]
 
 :module
+*afun, rad
+pi = acos(-1) 
 *afun, deg
+Emodulus = 210000 ! MPa
+gravity = 9806    ! mm/s/s
 
-boom_steel_mass = (2*.012*36*2.5+2*25*.010*2)*0.786 ! not used
+acelx = 0.11
+acely = 0.19
+acelz = 0.12
+
+
 ! Members: lenghts sort of arbitrary
 blfp = 3*5800+500 !boom tip from pivot
 jrtt = 3*5800+500-3500  ! jib rotationpoint to tip
@@ -34,6 +43,19 @@ bctr = 700 ! boom centerlinte to rotatejib
 bcta = 700+250 ! boom centerline to actuator
 jrax = 2046.4*cos(34.5) ! Jib Rotationpoint to Actuator dX
 jray = 2046.4*sin(34.5)! Jib Rotationpoint to Actuator dY
+
+! Actuators: Choosen out of CAD drawing and excel
+brod = 160 ! boom actuator rod diametert
+bpush = -1000e3 ! push and pull capacities
+bpull =   500e3 ! push and pull capacities
+jrod = 250 ! jib actuator rod diameter
+jpush = -2138e3 ! push and pull capacities
+jpull =  1107e3 ! push and pull capacities
+brod = jrod   ! the old actuator doesn't suffice in the buckling department
+bpush = jpush ! the old actuator doesn't suffice in the buckling department
+bpull = jpull ! the old actuator doesn't suffice in the buckling department
+
+
 
 /prep7
 MPTEMP,1,0 ! steel in [mm;ton;N]
@@ -54,11 +76,12 @@ SECTYPE,   3, BEAM, CTUBE, , 0
 SECOFFSET, CENT 
 SECDATA,160,200,12  ! Ri Ro n
 ET,2,LINK180
-R,2,100**2,0   !( elem, area, mass/length)
+R,2,pi/4*jrod**2,0   !( elem, area, mass/length)
+R,4,pi/4*brod**2,0   !( elem, area, mass/length)
 ET,3,MASS21
-R,3,1,1,1     ! deadload 1 tons each
-R,5,5,5,5     ! liveload 5 tons
-R,10,10,10,10 ! liveload 10 tons
+R,3,2.5,2.5,2.5     ! deadload 2.5 tons each * 7 = 17.5 (calculated = 16)
+R,5,liveload,liveload,liveload     ! liveload 
+
 
 N, 1,0,0,0
 N,11,0, 1202,0
@@ -137,14 +160,13 @@ N,19,1500,1202,-2500
 N,29,1500,-1202,-2500
 allsel
 
-type,2
-real,2
 
 MAT,2
 TYPE,2
-REAL,2
+REAL,4
 e,19,12
 e,29,22
+REAL,2
 e,13,16
 e,23,26
 CMSEL,u,boom
@@ -159,7 +181,7 @@ E,(1:7:1)
 CM,deadload,elem
 
 esel,none
-REAL,10
+REAL,5
 E,8
 cm,liveload,elem
 allsel
@@ -176,7 +198,10 @@ cp,next,uy,24,25
 cp,next,ux,24,25
 cp,next,uz,24,25
 
-acel,,-5000,10000
+acel,(0-acelx)*gravity,(0-acely)*gravity,(1+acelz)*gravity
+LSWRITE,1
+acel,(0+acelx)*gravity,(0-acely)*gravity,(1+acelz)*gravity
+LSWRITE,2
 
-solve
+lssolve,1,2,1
 

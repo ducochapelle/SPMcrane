@@ -2,9 +2,25 @@ finish
 /clear,nostart
 
 /out,spm,out
-*vwrite,' boom-A','jib-A', 'reach-X', 'reach-Z','aboom1','aboom2','ajib3','ajib4'
-(8A8)
+*vwrite, ' ', 'load','boom-A','jib-A', 'reach-X', 'reach-Z', 'fbmax', 'fbmin', 'fbbuc', 'fjmax', 'fjmin', 'fjbuc'
+(A1, 11A8)
+*vwrite, ' ', 't', 'deg', 'deg', 'mm', 'mm', '-', '-', '-', '-', '-', '-'
+(A1,11A8)
 /out
+
+! *dim,ufnames,char,6
+! ufnames(1) =  'fbmax', 'fbmin', 'fbbuc', 'fjmax', 'fjmin', 'fjbuc'
+
+/out,spmbubble,out
+*vwrite, ' ', 'load', 'alpha', 'beta', ',', 'reach-X', 'reach-Z', 'UF-name', 'UF-value'
+(A1, 8A8)
+/out
+
+
+*do,liveload,3,7,2
+*if,liveload,eq,7,then ! scraping by to do 3, 5 and 10 tons
+liveload = 10 
+*endif 
 *do,alpha,0,81.7,5
   *do,beta,60,180,5
     finish
@@ -15,4 +31,5 @@ finish
     /input,spmB,mac,,:module
     /input,spmC,mac
   *enddo
+*enddo 
 *enddo
