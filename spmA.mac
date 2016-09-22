@@ -22,7 +22,7 @@ finish
   liveload = 10 
   *endif 
   *do,alpha,0,81.7,5
-    *do,beta,60,180,5
+    *do,beta,0,120,5 ! 180 is stretched, it's the construction angle
       finish
       parsav
       /clear,nostart

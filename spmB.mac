@@ -18,7 +18,7 @@ finish
 !   (21,22,23,26,92) equivalent on other side where applicable               
 
 alpha = arg1 ! luffing [deg]
-beta = arg2 ! jibbing [deg]
+beta = arg2 ! jibbing [deg] (180 is stretched, the construction angle)
 liveload = arg3 ! load in tip [ton]
 
 :module
@@ -34,26 +34,27 @@ acelz = 0.12
 
 
 ! Members: lenghts sort of arbitrary
-blfp = 3*5800+500 !boom tip from pivot
-jrtt = 3*5800+500-3500  ! jib rotationpoint to tip
+blfp = 3*5800+500-112 !boom tip from pivot
+jrtt = 3*5800+500-3500+112  ! jib rotationpoint to tip
 
 ! Mechanism: Following parameters taken from CAD drawing
-btta = 6217 ! boom tip to actuator
-bctr = 700 ! boom centerlinte to rotatejib
-bcta = 700+250 ! boom centerline to actuator
-jrax = 2046.4*cos(34.5) ! Jib Rotationpoint to Actuator dX
-jray = 2046.4*sin(34.5)! Jib Rotationpoint to Actuator dY
+btta = 6199 ! boom tip to actuator
+bctr = 730 ! boom centerlinte to rotatejib
+bcta = 730+537 ! boom centerline to actuator
+jrax = 2046.489*cos(37.152) ! Jib Rotationpoint to Actuator dX
+jray = 2046.489*sin(37.152) ! Jib Rotationpoint to Actuator dY
 
 ! Actuators: Choosen out of CAD drawing and excel
+! Original, estimated from drawing
 brod = 160 ! boom actuator rod diametert
 bpush = -1000e3 ! push and pull capacities
 bpull =   500e3 ! push and pull capacities
+brod = 220
+bpush = -1689e3
+bpull = 891e3
 jrod = 250 ! jib actuator rod diameter
 jpush = -2138e3 ! push and pull capacities
 jpull =  1107e3 ! push and pull capacities
-brod = jrod   ! the old actuator doesn't suffice in the buckling department
-bpush = jpush ! the old actuator doesn't suffice in the buckling department
-bpull = jpull ! the old actuator doesn't suffice in the buckling department
 
 
 
@@ -99,8 +100,6 @@ wpcsys
 nwplan,,1
 wprota,,,-alpha
 transfer,4,0,all
-n,19,1500, 1202,-2500
-n,29,1500,-1202,-2500
 mat,1
 type,1
 secnum,1
@@ -140,7 +139,7 @@ wprota,,,-alpha
 csys,4
 wpoffs,,,-bctr
 csys,0
-wprota,,,beta
+wprota,,,180-beta ! 180 is stretched, the construction angle
 transfer,4,0,all
 mat,1
 secnum,1
@@ -156,8 +155,8 @@ e,5,25
 cmsel,u,boom
 cm,jib,elem
 
-n,19,1500,1202,-2500
-n,29,1500,-1202,-2500
+n,19,1300,1202,-2500
+n,29,1300,-1202,-2500
 allsel
 
 
