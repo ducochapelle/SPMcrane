@@ -28,9 +28,9 @@ pi = acos(-1)
 Emodulus = 210000 ! MPa
 gravity = 9806    ! mm/s/s
 
-acelx = 0.11+sin(4.3)
-acely = 0.19+sin(2.2)
-acelz = 0.12
+acelx = 0.11+sin(4.3)+0.08 ! surge, heel, wind
+acely = 0.19+sin(2.2)+0.08 ! sway, trim, wind
+acelz = 0.12               ! heave
 
 
 ! Members: lenghts sort of arbitrary
