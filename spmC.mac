@@ -3,8 +3,8 @@ set,first
 
 *get,posx,node,8,u,x
 *get,posz,node,8,u,z
-posx =
-posz = 
+posx = 0
+posz = 0
 posx = posx + nx(8) + 200 ! offset from centerline
 posz = posz + nz(8) + 8625-1250 ! offset from deck 
 
