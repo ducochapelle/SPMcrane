@@ -52,7 +52,14 @@ acely = 0.19+sin(4.3)+aw ! rookworst
 ! Members: lenghts sort of arbitrary
 blfp = 3*5800+500-112+1000  ! boom tip from pivot
 jrtt = 3*5800+500-3500+112  ! jib rotationpoint to tip
-jahw = 900                 ! Jib Actuator Half Width (the length between the two)
+jahw = 760                  ! jib actuator half width (the length between the two)
+jphw = 650                  ! jib pivot half width
+bahw = 1202                 ! boom actuator half width
+bphw = 1202                 ! boom pivot half width
+
+! Actuators will take up equal force though!
+jahw = 1e-17
+bahw = 1e-17
 
 ! Mechanism: Following parameters taken from CAD drawing
 btta = 6199 ! boom tip to actuator
@@ -117,17 +124,17 @@ r,5,liveload,liveload,liveload     ! liveload
 
 
 n, 1,0,0,0
-n,11,0, 1202,0
-n,21,0,-1202,0
+n,11,0, bphw,0
+n,21,0,-bphw,0
 n, 2,750+5730,0,0
-n,12,5800, 1202,-1450
-n,22,5800,-1202,-1450
+n,12,5800, bahw,-1450
+n,22,5800,-bahw,-1450
 n, 3,blfp-btta,0,0
 n,13,blfp-btta, jahw,-bcta
 n,23,blfp-btta,-jahw,-bcta
 n, 4,blfp,0,0
-n,14,blfp, 500,-bctr
-n,24,blfp,-500,-bctr
+n,14,blfp, jphw,-bctr
+n,24,blfp,-jphw,-bctr
 wpcsys
 nwplan,,1
 wprota,,,-alpha
@@ -154,8 +161,8 @@ cm,boom,elem
 
 nsel,none
 n, 5,0,0,0
-n,15,0,500,-bctr
-n,25,0,-500,-bctr
+n,15,0, jphw,-bctr
+n,25,0,-jphw,-bctr
 n, 6,jrax,   0,    0
 n,16,jrax, jahw,-bctr+jray
 n,26,jrax,-jahw,-bctr+jray
@@ -199,8 +206,8 @@ e,5,25
 cmsel,u,boom
 cm,jib,elem
 
-n,19,1300,1202,-2500
-n,29,1300,-1202,-2500
+n,19,1300, bahw,-2500
+n,29,1300,-bahw,-2500
 allsel
 
 
@@ -248,7 +255,7 @@ lswrite,2
 
 lssolve,1,2,1
 
-/esha,1 
-gplo
-/rep 
-/eof
+! /esha,1 
+! gplo
+! /rep 
+! /eof
