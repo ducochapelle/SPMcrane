@@ -83,16 +83,16 @@ def coupling(dof1,node1,node2):
                      nid=str(node1),dof=dof1)
     term = ET.SubElement(ce,"term",coefficient="-1 1/m",
                      nid=str(node2),dof=dof1)
-def table(filename1, elem=False):
+def table(mother,filename1, elem=False):
     a = ["m","m","m","m",u"°",u"°",u"°","kN","N","N","N.m","N.m","N.m","MPa","MPa","MPa","MPa","MPa",u"°","N","N","N","N","N.m","N.m","N.m","N.m"]
     b = ["displmag","displx","disply","displz","rotx","roty","rotz","tensileforce","sheary","shearz","torsion","bendingmomy","bendingmomz","stresspt1","stresspt2","stresspt3","stresspt4","stressptu","twistangle","reactionforcemag","reactionforcex","reactionforcey","reactionforcez","reactionmommag","reactionmomx","reactionmomy","reactionmomz"]
-    table = ET.SubElement(liml,"table")
+    table = ET.SubElement(mother,"table")
     component = ET.SubElement(table, "component").text = "Default"
     for n in zip(a,b):
         ET.SubElement(table, "fieldvalue", unit=n[0]).text = n[1]
     if elem:
+        ET.SubElement(table, "materials")
         ET.SubElement(table, "elementvalues")
-    ET.SubElement(table, "materials")
     ET.SubElement(table, "coordinates")
     ET.SubElement(table, "saveonsolve", filename=filename1)
     
@@ -154,8 +154,6 @@ def INITIALIZATION():
     global liml
     liml =  ET.Element("liml", version="5")
     anal =  ET.SubElement(liml, "analysis", type="S30")
-    table("nodes.csv")
-    table("elems.csv",elem=True)
 
 def MATERIALS():
     global elset
@@ -251,6 +249,8 @@ def SOLUTION():
     elset = ET.SubElement(solu,"elset",
                 name="Default", 
                 color="-6710887")
+    table(solu,"nodes.csv")
+    table(solu,"elems.csv",elem=True)
 
 def OUTPUT(filename):
     from xml.dom import minidom
@@ -261,8 +261,6 @@ def OUTPUT(filename):
 def POST(parameters):
     global db
     if not db:
-        con = sqlite3.connect(":memory:")
-        cur = con.cursor()
         headers = parameters.keys()+["Material","Element","Local node","Node","X","Y","Z","Displacement Magnitude","Displacement in X","Displacement in Y","Displacement in Z","Rotation about X","Rotation about Y","Rotation about Z","Tensile Force","Shear Force V","Shear Force W","Torsion Moment","Bending Moment about V","Bending Moment about W","Longitudinal Stress Point 1","Longitudinal Stress Point 2","Longitudinal Stress Point 3","Longitudinal Stress Point 4","Longitudinal Stress User Defined Point","Twist Angle","Reaction Force Magnitude","Reaction Force X","Reaction Force Y","Reaction Force Z","Reaction Moment Magnitude","Reaction Moment X","Reaction Moment Y","Reaction Moment Z"]
         h = ','.join(map(lambda x: ''.join(x.split()),headers))
         s = "CREATE TABLE t ("+h+");"
@@ -284,6 +282,8 @@ def POST(parameters):
     con.commit()
                 
 db = False
+con = sqlite3.connect(":memory:")
+cur = con.cursor()
 for alfa in range(0,81,40):
     alfa *= pi/180
     for beta in range(0,121,40):
